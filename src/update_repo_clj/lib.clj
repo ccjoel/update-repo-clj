@@ -1,24 +1,49 @@
 (ns update-repo-clj.lib
-  (:require [clojure.tools.logging  :as log]
-            [update-repo-clj.settings :refer [script-file-name]])
+  (:require [update-repo-clj.settings :refer [script-file-name templates-folder]]
+            [clojure.java.shell :as shell]
+            [taoensso.timbre :as timbre
+              :refer (log  trace  debug  info  warn  error  fatal get-env log-env)]
+            [taoensso.timbre.appenders.core :as appenders])
   (:use [selmer.parser]))
+
+(selmer.parser/set-resource-path! templates-folder)
 
 (defn with-abs-path [filename]
   (str (.getCanonicalPath (clojure.java.io/file ".")) (java.io.File/separator) filename))
 
-(def success-template "<h1>Success</h1>")
-(def error-template "<h1>Fail</h1>")
-(def index "<h1>Hello, world!</h1>")
+
+(timbre/merge-config!
+  {:appenders {:spit (appenders/spit-appender {:fname (with-abs-path "update-repo.log")})}})
+
+
+(def index (render-file "index.html" {}))
+
 
 (defn handle-errors [error]
-  (log/error (str error))
-  error-template)
+  (timbre/error (str error))
+  (render-file "error.html" {}))
+
 
 (defn handle-success [res]
-  (log/info (str res))
-  success-template)
+  (info (str res))
+  (render-file "success.html" {:result (str res)}))
+
 
 (def script
   (let [r (with-abs-path script-file-name)]
-    (log/info (str "Using script: " r))
+    (info (str "Using script: " r))
     r))
+
+
+(defn call-script []
+  (try
+    (let [result (shell/sh script)]
+      (if (= (:exit result) 0)
+        (handle-success result)
+        (handle-errors result)))
+  (catch java.io.IOException e
+    (handle-errors e))))
+
+
+(defn loginfo [text]
+  (info text))

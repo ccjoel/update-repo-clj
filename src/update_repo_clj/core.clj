@@ -1,20 +1,9 @@
 (ns update-repo-clj.core
   (:require [org.httpkit.server :refer [run-server]]
-            [clojure.java.shell :as shell]
-            [clojure.tools.logging :as log])
-  (:use [compojure.core]
-        [update-repo-clj.settings]
-        [update-repo-clj.lib])
+            [update-repo-clj.settings :refer [port]]
+            [update-repo-clj.lib :refer [call-script index loginfo]])
+  (:use [compojure.core])
   (:gen-class))
-
-(defn call-script []
-  (try
-    (let [result (shell/sh script)]
-      (if (= (:exit result) 0)
-        (handle-success result)
-        (handle-errors result)))
-  (catch java.io.IOException e
-    (handle-errors e))))
 
 (defroutes app
   (GET "/" [] index)
@@ -29,8 +18,8 @@
       (.addShutdownHook (.. Runtime getRuntime)
                         (Thread. (fn []
                                    (do
-                                     (log/info "shutting down..")
+                                     (loginfo "shutting down..")
                                      (@stop-server)
                                      (deliver shutdown nil)))))
-      (log/info (str "listening on " port))
+      (loginfo (str "listening on " port))
       @shutdown)))
