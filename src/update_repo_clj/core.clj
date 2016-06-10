@@ -7,7 +7,11 @@
 
 (defroutes app
   (GET "/" [] index)
-  (GET "/update" [] (call-script)))
+  (GET "/update" []
+    (call-script))
+  (ANY "*"  [] {
+    :status 404
+    :body "<h1>Page not found.</h1>"}))
 
 (defn -main
   "main"

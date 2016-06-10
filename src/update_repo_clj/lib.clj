@@ -21,12 +21,18 @@
 
 (defn handle-errors [error]
   (timbre/error (str error))
-  (render-file "error.html" {}))
+  {:status 400,
+   :headers {"Content-Type" "text/html"},
+   :body (render-file "error.html" {})
+  })
 
 
 (defn handle-success [res]
   (info (str res))
-  (render-file "success.html" {:result (str res)}))
+  {:status 200,
+   :headers {"Content-Type" "text/html"},
+   :body (render-file "success.html" {:result (str res)})
+  })
 
 
 (def script
