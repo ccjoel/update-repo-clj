@@ -4,4 +4,4 @@
 
 (def script-file-name "script.sh")
 
-(def templates-folder "/srv/qb/update-repo-clj/templates/")
+(def templates-folder "/srv/qb/update-repo-clj/resources/templates/")
