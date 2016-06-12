@@ -6,11 +6,10 @@
             [taoensso.timbre.appenders.core :as appenders])
   (:use [selmer.parser]))
 
-(selmer.parser/set-resource-path! templates-folder)
-
 (defn with-abs-path [filename]
   (str (.getCanonicalPath (clojure.java.io/file ".")) (java.io.File/separator) filename))
 
+(selmer.parser/set-resource-path! (with-abs-path templates-folder))
 
 (timbre/merge-config!
   {:appenders {:spit (appenders/spit-appender {:fname (with-abs-path "update-repo.log")})}})
