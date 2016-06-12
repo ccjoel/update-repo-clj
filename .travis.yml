@@ -1,0 +1,9 @@
+language: clojure
+script:
+  - bin/lein test
+  - bin/lein uberjar
+jdk:
+  - openjdk6
+  - openjdk7
+  - oraclejdk7
+  - oraclejdk8

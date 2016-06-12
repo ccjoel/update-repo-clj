@@ -1,0 +1,14 @@
+[
+
+ "CREATE TABLE users (
+  id TEXT PRIMARY KEY,
+  username TEXT NOT NULL,
+  first_name TEXT,
+  last_name TEXT,
+  login_password TEXT NOT NULL,
+  email TEXT NOT NULL,
+  created_on DATETIME,
+  modified_on DATETIME
+ )"
+
+]

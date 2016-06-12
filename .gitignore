@@ -11,3 +11,4 @@ pom.xml.asc
 .hg/
 .idea/
 update-repo.log
+test.db
