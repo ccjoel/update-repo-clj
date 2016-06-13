@@ -3,7 +3,8 @@
             [clojure.java.shell :as shell]
             [taoensso.timbre :as timbre
               :refer (log  trace  debug  info  warn  error  fatal get-env log-env)]
-            [taoensso.timbre.appenders.core :as appenders])
+            [taoensso.timbre.appenders.core :as appenders]
+            [org.httpkit.client :as http])
   (:use [selmer.parser]))
 
 (defn with-abs-path [filename]
@@ -17,14 +18,12 @@
 
 (def index (render-file "index.html" {}))
 
-
 (defn handle-errors [error]
   (timbre/error (str error))
   {:status 400,
    :headers {"Content-Type" "text/html"},
    :body (render-file "error.html" {})
   })
-
 
 (defn handle-success [res]
   (info (str res))
@@ -33,12 +32,10 @@
    :body (render-file "success.html" {:result (str res)})
   })
 
-
 (def script
   (let [r (with-abs-path script-file-name)]
     (info (str "Using script: " r))
     r))
-
 
 (defn call-script []
   (try
@@ -48,7 +45,6 @@
         (handle-errors result)))
   (catch java.io.IOException e
     (handle-errors e))))
-
 
 (defn loginfo [text]
   (info text))
