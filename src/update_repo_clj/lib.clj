@@ -3,8 +3,7 @@
             [clojure.java.shell :as shell]
             [taoensso.timbre :as timbre
               :refer (log  trace  debug  info  warn  error  fatal get-env log-env)]
-            [taoensso.timbre.appenders.core :as appenders]
-            [org.httpkit.client :as http])
+            [taoensso.timbre.appenders.core :as appenders])
   (:use [selmer.parser]))
 
 (defn with-abs-path [filename]

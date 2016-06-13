@@ -1,8 +1,7 @@
 (ns update-repo-clj.core
   (:require [org.httpkit.server :refer [run-server]]
             [update-repo-clj.settings :refer [port]]
-            [update-repo-clj.lib :refer [call-script index loginfo]]
-            [update-repo-clj.db])
+            [update-repo-clj.lib :refer [call-script index loginfo]])
   (:use [compojure.core])
   (:gen-class))
 
